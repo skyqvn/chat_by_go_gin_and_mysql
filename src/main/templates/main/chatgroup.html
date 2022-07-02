@@ -3,23 +3,23 @@
 {{template "base" . }}
 
 <head>
-    <title>
-        {{.group.Name}}
-    </title>
+	<title>
+		{{.group.Name}}
+	</title>
 </head>
 
 <br/>
 <form action="/send_message/{{.group.Id}}" method="post">
-    <input type="text" name="value" style="width: 300px">
-    <button>发表</button>
+	<input type="text" name="value" style="width: 300px">
+	<button>发表</button>
 </form>
 <a href="/chatgroup/{{.group.Id}}">
-    <button>刷新</button>
+	<button>刷新</button>
 </a>
 <hr/>
 {{range .reports}}
 <img src="/static_file/user_icon.png" style="height:19px;width:19px;position:relative;top:3px"/> <span
-        style="font-size:15px">{{.U.Name}}:</span> &nbsp{{.R.SendTime}}
+		style="font-size:15px">{{.U.Name}}:</span> &nbsp{{.R.SendTime}}
 <br/>
 <span style="font-size:17px;text-align:justify;">
     {{.R.Value}}
