@@ -24,7 +24,7 @@ func Index(context *gin.Context) {
 	var i int
 	var r *sql.Rows
 	var cg ChatGroupType
-	for rows.Next() {
+	for rows.Next() { //得到所有与当前用户ID匹配的聊天群
 		err = rows.Scan(&i)
 		if err != nil {
 			myerror.Raise404(context, err)
@@ -77,7 +77,7 @@ func ChatGroup(context *gin.Context) {
 		return
 	}
 	var r Ru
-	for rows.Next() {
+	for rows.Next() { //获得所有与当前群关联的消息以及发送消息的用户
 		r = Ru{}
 		err := rows.Scan(&r.R.ChatGroup, &r.R.UserID, &r.R.Value, &r.R.SendTime)
 		rs, err := DB.Query("select id,name,introduce from user where id=?", r.R.UserID)
@@ -137,6 +137,7 @@ func SendMessage(context *gin.Context) {
 		context.Redirect(302, "/chatgroup/"+context.Param("group_id"))
 		return
 	}
+	//如果请求不是post
 	myerror.Raise500(context, fmt.Errorf("SendMessage:请求方法错误"))
 }
 
@@ -277,7 +278,7 @@ func DeleteMember(context *gin.Context) {
 		return
 	}
 	//查看rows长度是否为零
-	if rows.Next() == false { //如果长度为零
+	if !rows.Next() { //如果长度为零
 		myerror.Raise404(context, fmt.Errorf("DeleteMember:长度为零"))
 		return
 	} else { //如果长度不为零
