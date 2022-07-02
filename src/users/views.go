@@ -7,6 +7,8 @@ import (
 	"strconv"
 )
 
+//如果有正确的cookies,则返回用户的ID和nil
+//否则进行报错处理,并返回错误
 func GetUser(context *gin.Context) (uint64, error) {
 	loginCode, err := context.Cookie("login_code")
 	if err != nil {
@@ -32,6 +34,9 @@ func GetUser(context *gin.Context) (uint64, error) {
 	return 0, fmt.Errorf("未登录")
 }
 
+//判断用户是否可以按cookies登录的中间件
+//如果可以,就进行下一步操作
+//否则进入等待登录界面
 func IsLogin(context *gin.Context) {
 	_, err := GetUser(context)
 	if err != nil {
@@ -41,6 +46,7 @@ func IsLogin(context *gin.Context) {
 	}
 }
 
+//用于登录的函数
 func LoginFunc(context *gin.Context, form UserType, next string) error {
 	var password string
 	rows, err := DB.Query("select password from user where name=?", form.Name)
@@ -133,7 +139,7 @@ func LoggedOut(context *gin.Context) {
 		myerror.Raise404(context, err)
 		return
 	}
-	if rows.Next() {
+	if rows.Next() { //如果有此login_code
 		context.SetCookie("login_code", "", 0, "/", LocalHost, false, true)
 		context.HTML(200, "users/logged_out", nil)
 		return
@@ -196,6 +202,7 @@ func Register(context *gin.Context) {
 
 		_, err = DB.Exec("insert into user(name,password,introduce) values(?,?,?)", form.Name, form.Password, form.Introduce)
 		if err == nil {
+			//注册之后自动登录
 			err = LoginFunc(context, form, next)
 			if err == nil {
 				context.Redirect(302, "/")

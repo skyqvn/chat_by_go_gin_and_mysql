@@ -42,14 +42,6 @@ func ShowWarning(context *gin.Context, err error, s string) {
 	}
 }
 
-func SQLError(context *gin.Context, err error) {
-	_, err = gin.DefaultWriter.Write([]byte(fmt.Sprintln("SQLError:", err.Error())))
-	if err != nil {
-		fmt.Println("SQLError:无法写入", err)
-	}
-	context.HTML(500, "myerror/500error", nil)
-}
-
 func LogError(err error) {
 	_, err = gin.DefaultWriter.Write([]byte(fmt.Sprintln("LogError:", err.Error())))
 	if err != nil {
