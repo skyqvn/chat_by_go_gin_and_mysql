@@ -1,0 +1,19 @@
+{{define "main/search"}}
+
+{{template "base" . }}
+
+<head>
+    <title>
+        搜索
+    </title>
+    <script>
+        function join() {
+            location.href = '/join_group/' + document.getElementById('search').value;
+        }
+    </script>
+</head>
+
+群聊ID:
+<input id="search"/>
+<button onclick="join()">加入</button>
+{{end}}

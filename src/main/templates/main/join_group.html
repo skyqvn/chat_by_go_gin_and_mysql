@@ -1,0 +1,17 @@
+{{define "main/join_group"}}
+
+{{template "base" . }}
+
+<head>
+    <title>
+        加入{{.group.Name}}
+    </title>
+</head>
+
+<form action="/join_group/{{.group.Id}}" method="post">
+    <label for="password">密码:</label>
+        <input name="password" type="text" value="{{.password}}" required id="password"/>
+    <button>提交</button>
+</form>
+
+{{end}}

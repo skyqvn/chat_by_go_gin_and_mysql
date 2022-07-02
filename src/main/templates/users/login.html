@@ -1,0 +1,31 @@
+{{define "users/login"}}
+
+{{template "base" . }}
+
+<head>
+	<title>登录</title>
+</head>
+
+<h3>{{.warning}}</h3>
+
+
+<form action="/user/login" method="post">
+	<p>
+		<label for="name">用户名:</label>
+		<input type="text" name="name" value="{{.form.Name}}" maxlength="150"
+		       required id="name">
+	</p>
+	
+	<p>
+		<label for="password">密码:</label>
+		<input type="password" name="password" value="{{.form.Password}}" required id="password">
+	</p>
+	
+	<button>登录</button>
+	<input name="next" type="hidden" value="/"/>
+</form>
+<a href="/user/register">注册</a>
+<a href="/user/logged_out">登出</a>
+
+{{end}}
+

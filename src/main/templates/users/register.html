@@ -1,0 +1,33 @@
+{{define "users/register"}}
+
+{{template "base" . }}
+
+<h3>{{.warning}}</h3>
+
+<form action="/user/register" method="post">
+	<p>
+		<label for="name"><span style="vertical-align: inherit;">用户名：</span></label>
+		<input type="text" name="name" value="{{.form.Name}}" maxlength="150" required id="name">
+	</p>
+	
+	<p>
+		<label for="password1"><span style="vertical-align: inherit;">密码：</span></label>
+		<input type="password" name="password" value="{{.form.Password}}" required id="password1">
+	</p>
+	
+	<p>
+		<label for="password2"><span
+				style="vertical-align: inherit;">确认密码：</span></label>
+		<input type="password" name="password2" required id="password2">
+	</p>
+	
+	
+	<p>
+		<label for="introduce"><span style="vertical-align: inherit;">简介：</span></label>
+		<textarea name="introduce" maxlength="150" id="introduce" rows="5" cols="30" style="resize: none">{{.form.Introduce}}</textarea>
+	</p>
+	
+	<button name="submit"><span style="vertical-align: inherit;">注册</span></button>
+	<input name="next" type="hidden" value="/">
+</form>
+{{end}}
