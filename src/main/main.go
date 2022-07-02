@@ -32,7 +32,7 @@ func main() {
 	users.R = R
 	users.LocalHost = LocalHost
 	Engine.GET("/favicon.ico", func(context *gin.Context) {
-		context.File("./static_file/group_icon.png")
+		context.File("./static_file/group_icon.ico")
 	})
 	homePage := Engine.Group("/", users.IsLogin)
 	{
