@@ -8,5 +8,3 @@ import (
 var DB *sql.DB
 var R *rand.Rand
 var LocalHost string
-
-

@@ -17,24 +17,24 @@ import (
 var DB, _ = sql.Open("mysql", "root:123456@tcp(127.0.0.1:3306)/chat?parseTime=true")
 var Engine = gin.Default()
 var R = rand.New(rand.NewSource(time.Now().Unix()))
-var f,err=os.OpenFile("chat.log",os.O_RDWR,0777)
-var LogFile=io.MultiWriter(f, os.Stdout)
-var LocalHost ="192.168.31.177"
+var f, err = os.OpenFile("chat.log", os.O_RDWR, 0777)
+var LogFile = io.MultiWriter(f, os.Stdout)
+var LocalHost = "192.168.31.177"
 
 func main() {
-	if err!=nil{
-		fmt.Println("文件打开错误：",err)
+	if err != nil {
+		fmt.Println("文件打开错误：", err)
 		return
 	}
 	gin.DefaultWriter = LogFile
 	Engine.LoadHTMLGlob("templates/**/*")
 	users.DB = DB
 	users.R = R
-	users.LocalHost=LocalHost
+	users.LocalHost = LocalHost
 	Engine.GET("/favicon.ico", func(context *gin.Context) {
 		context.File("./static_file/group_icon.png")
 	})
-	homePage := Engine.Group("/",users.IsLogin)
+	homePage := Engine.Group("/", users.IsLogin)
 	{
 		homePage.GET("", Index)
 		homePage.GET("chatgroup/:group_id", ChatGroup)
@@ -50,12 +50,12 @@ func main() {
 		user.Any("logged_out", users.LoggedOut)
 		user.Any("register", users.Register)
 	}
-	Engine.StaticFS("/static_file",http.Dir("static_file"))
+	Engine.StaticFS("/static_file", http.Dir("static_file"))
 	Engine.NoRoute(myerror.CRaise404)
-	err= Engine.Run("0.0.0.0:80")
-	if err!=nil{
-		_,err=gin.DefaultWriter.Write([]byte(err.Error()))
-		if err!=nil{
+	err = Engine.Run("0.0.0.0:80")
+	if err != nil {
+		_, err = gin.DefaultWriter.Write([]byte(err.Error()))
+		if err != nil {
 			fmt.Println("无法写入")
 		}
 	}

@@ -78,17 +78,17 @@ func ChatGroup(context *gin.Context) {
 	}
 	var r Ru
 	for rows.Next() {
-		r= Ru{}
+		r = Ru{}
 		err := rows.Scan(&r.R.ChatGroup, &r.R.UserID, &r.R.Value, &r.R.SendTime)
-		rs,err:=DB.Query("select id,name,introduce from user where id=?",r.R.UserID)
-		if err!=nil{
-			myerror.Raise500(context,err)
+		rs, err := DB.Query("select id,name,introduce from user where id=?", r.R.UserID)
+		if err != nil {
+			myerror.Raise500(context, err)
 			return
 		}
 		rs.Next()
-		err=rs.Scan(&r.U.Id,&r.U.Name,&r.U.Introduce)
-		if err!=nil{
-			myerror.Raise500(context,err)
+		err = rs.Scan(&r.U.Id, &r.U.Name, &r.U.Introduce)
+		if err != nil {
+			myerror.Raise500(context, err)
 		}
 		reports = append(reports, r)
 	}
@@ -143,7 +143,7 @@ func SendMessage(context *gin.Context) {
 func JoinGroup(context *gin.Context) {
 	var password string
 	var group ChatGroupType
-	user,err:=users.GetUser(context)
+	user, err := users.GetUser(context)
 	if err != nil {
 		return
 	}
@@ -159,8 +159,8 @@ func JoinGroup(context *gin.Context) {
 			myerror.Raise404(context, err)
 			return
 		}
-		if !rows.Next(){
-			myerror.Raise404(context,fmt.Errorf("JoinGroup:无此聊天群"))
+		if !rows.Next() {
+			myerror.Raise404(context, fmt.Errorf("JoinGroup:无此聊天群"))
 			return
 		}
 		err = rows.Scan(&group.Name, &group.Introduce, &group.Password)
@@ -168,13 +168,13 @@ func JoinGroup(context *gin.Context) {
 			myerror.Raise404(context, err)
 			return
 		}
-		rows,err=DB.Query("select * from member where chatgroup=? and owner=?",group.Id,user)
-		if err!=nil{
-			myerror.Raise500(context,err)
+		rows, err = DB.Query("select * from member where chatgroup=? and owner=?", group.Id, user)
+		if err != nil {
+			myerror.Raise500(context, err)
 			return
 		}
-		if rows.Next(){
-			context.Redirect(302,"/")
+		if rows.Next() {
+			context.Redirect(302, "/")
 			return
 		}
 		password, ok = context.GetPostForm("password")
@@ -184,7 +184,7 @@ func JoinGroup(context *gin.Context) {
 		}
 		if password == group.Password {
 			var member MemberType
-			member.Owner=user
+			member.Owner = user
 			member.ChatGroup = group.Id
 			_, err := DB.Exec("insert into member(owner,chatgroup) values(?,?)", member.Owner, member.ChatGroup)
 			if err != nil {
@@ -195,7 +195,7 @@ func JoinGroup(context *gin.Context) {
 			return
 		}
 	}
-	
+
 	context.HTML(200, "main/join_group", gin.H{
 		"password": password,
 		"group":    group,
@@ -216,15 +216,15 @@ func CreateGroup(context *gin.Context) {
 			myerror.Raise404(context, fmt.Errorf("CreateGroup:无password字段"))
 			return
 		}
-		password,ok:=context.GetPostForm("password2")
+		password, ok := context.GetPostForm("password2")
 		if !ok {
 			myerror.Raise404(context, fmt.Errorf("CreateGroup:无password2字段"))
 			return
 		}
-		if form.Password!=password{
+		if form.Password != password {
 			context.HTML(200, "main/create_group", gin.H{
-				"form": form,
-				"warning":"密码不匹配",
+				"form":    form,
+				"warning": "密码不匹配",
 			})
 			return
 		}
@@ -255,8 +255,8 @@ func CreateGroup(context *gin.Context) {
 		}
 	}
 	context.HTML(200, "main/create_group", gin.H{
-		"form": form,
-		"warning":"",
+		"form":    form,
+		"warning": "",
 	})
 }
 

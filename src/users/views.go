@@ -51,7 +51,7 @@ func LoginFunc(context *gin.Context, form UserType, next string) error {
 	if !rows.Next() {
 		fmt.Println("3")
 		context.HTML(200, "users/login", gin.H{
-			"form":form,
+			"form":    form,
 			"warning": "无此用户信息",
 		})
 		return fmt.Errorf("LoginFunc:无此用户信息")
@@ -86,7 +86,7 @@ func LoginFunc(context *gin.Context, form UserType, next string) error {
 		return nil
 	}
 	context.HTML(200, "users/login", gin.H{
-		"form":form,
+		"form":    form,
 		"warning": "密码错误",
 	})
 	return fmt.Errorf("LoginFunc:密码错误")
@@ -117,7 +117,7 @@ func Login(context *gin.Context) {
 		return
 	}
 	context.HTML(200, "users/login", gin.H{
-		"form":form,
+		"form":    form,
 		"warning": "",
 	})
 }
@@ -163,19 +163,19 @@ func Register(context *gin.Context) {
 			})
 			return
 		}
-		
+
 		form.Password, ok = context.GetPostForm("password")
 		if !ok {
 			myerror.Raise500(context, fmt.Errorf("Register:无password字段"))
 			return
 		}
-		
+
 		password2, ok = context.GetPostForm("password2")
 		if !ok {
 			myerror.Raise500(context, fmt.Errorf("Register:无password2字段"))
 			return
 		}
-		
+
 		if password2 != form.Password {
 			context.HTML(200, "users/register", gin.H{
 				"form":    form,
@@ -183,7 +183,7 @@ func Register(context *gin.Context) {
 			})
 			return
 		}
-		
+
 		form.Introduce, ok = context.GetPostForm("introduce")
 		if !ok {
 			myerror.Raise500(context, fmt.Errorf("Register:无introduce字段"))
@@ -193,7 +193,7 @@ func Register(context *gin.Context) {
 		if !ok {
 			next = "/"
 		}
-		
+
 		_, err = DB.Exec("insert into user(name,password,introduce) values(?,?,?)", form.Name, form.Password, form.Introduce)
 		if err == nil {
 			err = LoginFunc(context, form, next)
