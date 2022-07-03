@@ -5,6 +5,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"myerror"
 	"strconv"
+	"time"
 )
 
 //如果有正确的cookies,则返回用户的ID和nil
@@ -27,6 +28,27 @@ func GetUser(context *gin.Context) (uint64, error) {
 			myerror.LogError(err)
 			myerror.Raise500(context, err)
 			return 0, err
+		}
+		rows, err := DB.Query("select last_login_time from user where id=?", id)
+		if err != nil {
+			myerror.Raise500(context, err)
+			return 0, err
+		}
+		var lastLoginTime time.Time
+		rows.Next()
+		err = rows.Scan(&lastLoginTime)
+		if err != nil {
+			myerror.Raise500(context, err)
+			return 0, err
+		}
+		if time.Now().Sub(lastLoginTime).Hours() > 168 {
+			_, err = DB.Exec("update user set login_code='' where id=?", id)
+			if err != nil {
+				myerror.Raise500(context, err)
+				return 0, err
+			}
+			myerror.Raise500(context, fmt.Errorf("cookies已过期"))
+			return 0, fmt.Errorf("cookies已过期")
 		}
 		return id, nil
 	}
