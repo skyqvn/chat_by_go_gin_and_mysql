@@ -10,7 +10,7 @@
 
 <br/>
 <form action="/send_message/{{.group.Id}}" method="post">
-	<input type="text" name="value" style="width: 300px">
+	<input type="text" name="value" style="width: 300px" required>
 	<button>发表</button>
 </form>
 <a href="/chatgroup/{{.group.Id}}">

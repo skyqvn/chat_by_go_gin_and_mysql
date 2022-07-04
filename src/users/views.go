@@ -14,9 +14,11 @@ import (
 func GetUser(context *gin.Context) (uint64, error) {
 	var rows *sql.Rows
 	defer func() {
-		err := rows.Close()
-		if err != nil {
-			myerror.Raise500(context, err)
+		if rows != nil {
+			err := rows.Close()
+			if err != nil {
+				myerror.Raise500(context, err)
+			}
 		}
 	}()
 	loginCode, err := context.Cookie("login_code")
@@ -224,9 +226,11 @@ func Register(context *gin.Context) {
 	var err error
 	var password2 string
 	defer func() {
-		err := rows.Close()
-		if err != nil {
-			myerror.Raise500(context, err)
+		if rows != nil {
+			err := rows.Close()
+			if err != nil {
+				myerror.Raise500(context, err)
+			}
 		}
 	}()
 	if context.Request.Method == "POST" {

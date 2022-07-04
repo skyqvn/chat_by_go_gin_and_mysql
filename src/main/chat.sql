@@ -17,11 +17,13 @@
 SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
 
+CREATE DATABASE IF NOT EXISTS chat;
+USE chat;
+
 -- ----------------------------
 -- Table structure for chatgroup
 -- ----------------------------
-DROP TABLE IF EXISTS `chatgroup`;
-CREATE TABLE `chatgroup`  (
+CREATE TABLE IF NOT EXISTS `chatgroup`  (
   `name` char(25) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `password` char(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `introduce` char(200) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
@@ -32,8 +34,7 @@ CREATE TABLE `chatgroup`  (
 -- ----------------------------
 -- Table structure for member
 -- ----------------------------
-DROP TABLE IF EXISTS `member`;
-CREATE TABLE `member`  (
+CREATE TABLE IF NOT EXISTS `member`  (
   `owner` bigint UNSIGNED NULL DEFAULT NULL,
   `chatgroup` bigint UNSIGNED NULL DEFAULT NULL,
   INDEX `chatgroup`(`chatgroup` ASC) USING BTREE,
@@ -45,8 +46,7 @@ CREATE TABLE `member`  (
 -- ----------------------------
 -- Table structure for report
 -- ----------------------------
-DROP TABLE IF EXISTS `report`;
-CREATE TABLE `report`  (
+CREATE TABLE IF NOT EXISTS `report`  (
   `chatgroup` bigint UNSIGNED NOT NULL,
   `userid` bigint UNSIGNED NOT NULL,
   `value` text CHARACTER SET utf8 COLLATE utf8_general_ci NULL,
@@ -60,14 +60,13 @@ CREATE TABLE `report`  (
 -- ----------------------------
 -- Table structure for user
 -- ----------------------------
-DROP TABLE IF EXISTS `user`;
-CREATE TABLE `user`  (
+CREATE TABLE IF NOT EXISTS `user`  (
   `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT,
   `name` char(25) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '匿名用户',
   `password` char(20) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '000000',
   `introduce` char(200) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `login_code` bigint UNSIGNED NULL DEFAULT NULL,
-  `last_logi_time` datetime NULL DEFAULT CURRENT_TIMESTAMP,
+  `last_login_time` datetime NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 16 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 

@@ -75,9 +75,11 @@ func ChatGroup(context *gin.Context) {
 	var r Ru
 	var rs *sql.Rows
 	defer func() {
-		err := rows.Close()
-		if err != nil {
-			myerror.Raise500(context, err)
+		if rows != nil {
+			err = rows.Close()
+			if err != nil {
+				myerror.Raise500(context, err)
+			}
 		}
 		if rs != nil {
 			err = rs.Close()
@@ -143,9 +145,11 @@ func ChatGroup(context *gin.Context) {
 func SendMessage(context *gin.Context) {
 	var rows *sql.Rows
 	defer func() {
-		err := rows.Close()
-		if err != nil {
-			myerror.Raise500(context, err)
+		if rows != nil {
+			err := rows.Close()
+			if err != nil {
+				myerror.Raise500(context, err)
+			}
 		}
 	}()
 	if context.Request.Method == "POST" {
@@ -195,9 +199,11 @@ func JoinGroup(context *gin.Context) {
 	var password string
 	var group ChatGroupType
 	defer func() {
-		err := rows.Close()
-		if err != nil {
-			myerror.Raise500(context, err)
+		if rows != nil {
+			err := rows.Close()
+			if err != nil {
+				myerror.Raise500(context, err)
+			}
 		}
 	}()
 	user, err := users.GetUser(context)
