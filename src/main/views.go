@@ -20,9 +20,11 @@ func Index(context *gin.Context) {
 		if err != nil {
 			myerror.Raise500(context, err)
 		}
-		err = rs.Close()
-		if err != nil {
-			myerror.Raise500(context, err)
+		if rs != nil {
+			err = rs.Close()
+			if err != nil {
+				myerror.Raise500(context, err)
+			}
 		}
 	}()
 	user, err := users.GetUser(context)
@@ -77,9 +79,11 @@ func ChatGroup(context *gin.Context) {
 		if err != nil {
 			myerror.Raise500(context, err)
 		}
-		err = rs.Close()
-		if err != nil {
-			myerror.Raise500(context, err)
+		if rs != nil {
+			err = rs.Close()
+			if err != nil {
+				myerror.Raise500(context, err)
+			}
 		}
 	}()
 	groupId, err := strconv.ParseUint(context.Param("group_id"), 10, 64)
