@@ -14,14 +14,16 @@ import (
 	"users"
 )
 
+const HostURL = "192.168.31.177"
+
 var DB, _ = sql.Open("mysql", "root:123456@tcp(127.0.0.1:3306)/chat?parseTime=true")
 var Engine = gin.Default()
 var R = rand.New(rand.NewSource(time.Now().Unix()))
 var f, err = os.OpenFile("chat.log", os.O_RDWR, 0777)
 var LogFile = io.MultiWriter(f, os.Stdout)
-var LocalHost = "192.168.31.177"
 
 func main() {
+	defer DB.Close()
 	if err != nil {
 		fmt.Println("文件打开错误：", err)
 		return
@@ -30,7 +32,7 @@ func main() {
 	Engine.LoadHTMLGlob("templates/**/*")
 	users.DB = DB
 	users.R = R
-	users.LocalHost = LocalHost
+	users.LocalHost = HostURL
 	Engine.GET("/favicon.ico", func(context *gin.Context) {
 		context.File("./static_file/group_icon.ico")
 	})

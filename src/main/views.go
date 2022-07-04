@@ -11,34 +11,50 @@ import (
 )
 
 func Index(context *gin.Context) {
+	var rows *sql.Rows
+	var i int
+	var rs *sql.Rows
+	var cg ChatGroupType
+	defer func() {
+		err := rows.Close()
+		if err != nil {
+			myerror.Raise500(context, err)
+		}
+		err = rs.Close()
+		if err != nil {
+			myerror.Raise500(context, err)
+		}
+	}()
 	user, err := users.GetUser(context)
 	if err != nil {
 		return
 	}
 	var sli []ChatGroupType
-	rows, err := DB.Query("select chatgroup from member where owner=?", user)
+	rows, err = DB.Query("select chatgroup from member where owner=?", user)
 	if err != nil {
 		myerror.Raise404(context, err)
 		return
 	}
-	var i int
-	var r *sql.Rows
-	var cg ChatGroupType
 	for rows.Next() { //得到所有与当前用户ID匹配的聊天群
 		err = rows.Scan(&i)
 		if err != nil {
 			myerror.Raise404(context, err)
 			return
 		}
-		r, err = DB.Query("select name,password,introduce,id from chatgroup where id=?", i)
+		rs, err = DB.Query("select name,password,introduce,id from chatgroup where id=?", i)
 		if err != nil {
 			myerror.Raise404(context, err)
 			return
 		}
-		r.Next()
-		err = r.Scan(&cg.Name, &cg.Password, &cg.Introduce, &cg.Id)
+		rs.Next()
+		err = rs.Scan(&cg.Name, &cg.Password, &cg.Introduce, &cg.Id)
 		if err != nil {
 			myerror.Raise404(context, err)
+			return
+		}
+		err = rs.Close()
+		if err != nil {
+			myerror.Raise500(context, err)
 			return
 		}
 		sli = append(sli, cg)
@@ -53,6 +69,19 @@ func ChatGroup(context *gin.Context) {
 		R ReportType
 		U users.UserType
 	}
+	var rows *sql.Rows
+	var r Ru
+	var rs *sql.Rows
+	defer func() {
+		err := rows.Close()
+		if err != nil {
+			myerror.Raise500(context, err)
+		}
+		err = rs.Close()
+		if err != nil {
+			myerror.Raise500(context, err)
+		}
+	}()
 	groupId, err := strconv.ParseUint(context.Param("group_id"), 10, 64)
 	if err != nil {
 		myerror.Raise500(context, err)
@@ -60,7 +89,7 @@ func ChatGroup(context *gin.Context) {
 	}
 	var group ChatGroupType
 	var reports []Ru
-	rows, err := DB.Query("select name,password,introduce,id from chatgroup where id=?", groupId)
+	rows, err = DB.Query("select name,password,introduce,id from chatgroup where id=?", groupId)
 	if err != nil {
 		myerror.Raise404(context, err)
 		return
@@ -71,16 +100,20 @@ func ChatGroup(context *gin.Context) {
 		myerror.Raise404(context, err)
 		return
 	}
+	err = rows.Close()
+	if err != nil {
+		myerror.Raise500(context, err)
+		return
+	}
 	rows, err = DB.Query("select chatgroup,userid,value,send_time from report where chatgroup=? order by send_time desc", groupId)
 	if err != nil {
 		myerror.Raise404(context, err)
 		return
 	}
-	var r Ru
 	for rows.Next() { //获得所有与当前群关联的消息以及发送消息的用户
 		r = Ru{}
 		err := rows.Scan(&r.R.ChatGroup, &r.R.UserID, &r.R.Value, &r.R.SendTime)
-		rs, err := DB.Query("select id,name,introduce from user where id=?", r.R.UserID)
+		rs, err = DB.Query("select id,name,introduce from user where id=?", r.R.UserID)
 		if err != nil {
 			myerror.Raise500(context, err)
 			return
@@ -89,6 +122,11 @@ func ChatGroup(context *gin.Context) {
 		err = rs.Scan(&r.U.Id, &r.U.Name, &r.U.Introduce)
 		if err != nil {
 			myerror.Raise500(context, err)
+		}
+		err = rs.Close()
+		if err != nil {
+			myerror.Raise500(context, err)
+			return
 		}
 		reports = append(reports, r)
 	}
@@ -99,6 +137,13 @@ func ChatGroup(context *gin.Context) {
 }
 
 func SendMessage(context *gin.Context) {
+	var rows *sql.Rows
+	defer func() {
+		err := rows.Close()
+		if err != nil {
+			myerror.Raise500(context, err)
+		}
+	}()
 	if context.Request.Method == "POST" {
 		var ok bool
 		var err error
@@ -109,7 +154,7 @@ func SendMessage(context *gin.Context) {
 			return
 		}
 		var group uint64
-		rows, err := DB.Query("select id from chatgroup where id=?", form.ChatGroup)
+		rows, err = DB.Query("select id from chatgroup where id=?", form.ChatGroup)
 		if err != nil {
 			myerror.Raise404(context, err)
 			return
@@ -142,8 +187,15 @@ func SendMessage(context *gin.Context) {
 }
 
 func JoinGroup(context *gin.Context) {
+	var rows *sql.Rows
 	var password string
 	var group ChatGroupType
+	defer func() {
+		err := rows.Close()
+		if err != nil {
+			myerror.Raise500(context, err)
+		}
+	}()
 	user, err := users.GetUser(context)
 	if err != nil {
 		return
@@ -155,7 +207,7 @@ func JoinGroup(context *gin.Context) {
 	}
 	if context.Request.Method == "POST" {
 		var ok bool
-		rows, err := DB.Query("select name,introduce,password from chatgroup where id=?", group.Id)
+		rows, err = DB.Query("select name,introduce,password from chatgroup where id=?", group.Id)
 		if err != nil {
 			myerror.Raise404(context, err)
 			return
@@ -169,6 +221,11 @@ func JoinGroup(context *gin.Context) {
 			myerror.Raise404(context, err)
 			return
 		}
+		err = rows.Close()
+		if err != nil {
+			myerror.Raise500(context, err)
+			return
+		}
 		rows, err = DB.Query("select * from member where chatgroup=? and owner=?", group.Id, user)
 		if err != nil {
 			myerror.Raise500(context, err)
@@ -176,6 +233,11 @@ func JoinGroup(context *gin.Context) {
 		}
 		if rows.Next() {
 			context.Redirect(302, "/")
+			return
+		}
+		err = rows.Close()
+		if err != nil {
+			myerror.Raise500(context, err)
 			return
 		}
 		password, ok = context.GetPostForm("password")
@@ -262,6 +324,13 @@ func CreateGroup(context *gin.Context) {
 }
 
 func DeleteMember(context *gin.Context) {
+	var rows *sql.Rows
+	defer func() {
+		err := rows.Close()
+		if err != nil {
+			myerror.Raise500(context, err)
+		}
+	}()
 	groupId, err := strconv.ParseUint(context.Param("group_id"), 10, 64)
 	if err != nil {
 		myerror.Raise500(context, err)
@@ -272,18 +341,25 @@ func DeleteMember(context *gin.Context) {
 		myerror.Raise404(context, err)
 		return
 	}
-	rows, err := DB.Query("select owner,chatgroup from member where owner=? and chatgroup=?", user, groupId)
+	rows, err = DB.Query("select owner,chatgroup from member where owner=? and chatgroup=?", user, groupId)
 	if err != nil {
 		myerror.Raise404(context, err)
 		return
 	}
 	//查看rows长度是否为零
-	if !rows.Next() { //如果长度为零
+	ok := rows.Next()
+	err = rows.Close()
+	if err != nil {
+		myerror.Raise500(context, err)
+		return
+	}
+	if !ok { //如果长度为零
 		myerror.Raise404(context, fmt.Errorf("DeleteMember:长度为零"))
 		return
 	} else { //如果长度不为零
 		_, err = DB.Exec("delete from member where chatgroup=?", groupId)
 		if err != nil {
+
 			myerror.Raise500(context, err)
 			return
 		}
@@ -292,7 +368,13 @@ func DeleteMember(context *gin.Context) {
 			myerror.Raise500(context, err)
 			return
 		}
-		if !rows.Next() { //如果聊天室没有人了
+		ok = rows.Next()
+		err = rows.Close()
+		if err != nil {
+			myerror.Raise500(context, err)
+			return
+		}
+		if !ok { //如果聊天室没有人了
 			_, err = DB.Exec("delete from chatgroup where id=?", groupId) //删除聊天室
 			if err != nil {
 				myerror.Raise500(context, err)
