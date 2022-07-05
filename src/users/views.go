@@ -94,9 +94,11 @@ func LoginFunc(context *gin.Context, form UserType, next string) error {
 	var password string
 	var err error
 	defer func() {
-		err := rows.Close()
-		if err != nil {
-			myerror.Raise500(context, err)
+		if rows != nil {
+			err := rows.Close()
+			if err != nil {
+				myerror.Raise500(context, err)
+			}
 		}
 	}()
 	rows, err = DB.Query("select password from user where name=?", form.Name)
@@ -191,9 +193,11 @@ func Login(context *gin.Context) {
 func LoggedOut(context *gin.Context) {
 	var rows *sql.Rows
 	defer func() {
-		err := rows.Close()
-		if err != nil {
-			myerror.Raise500(context, err)
+		if rows != nil {
+			err := rows.Close()
+			if err != nil {
+				myerror.Raise500(context, err)
+			}
 		}
 	}()
 	loginCode, err := context.Cookie("login_code")

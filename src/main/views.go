@@ -16,9 +16,11 @@ func Index(context *gin.Context) {
 	var rs *sql.Rows
 	var cg ChatGroupType
 	defer func() {
-		err := rows.Close()
-		if err != nil {
-			myerror.Raise500(context, err)
+		if rows != nil {
+			err := rows.Close()
+			if err != nil {
+				myerror.Raise500(context, err)
+			}
 		}
 		if rs != nil {
 			err = rs.Close()
@@ -76,7 +78,7 @@ func ChatGroup(context *gin.Context) {
 	var rs *sql.Rows
 	defer func() {
 		if rows != nil {
-			err = rows.Close()
+			err := rows.Close()
 			if err != nil {
 				myerror.Raise500(context, err)
 			}
@@ -336,9 +338,11 @@ func CreateGroup(context *gin.Context) {
 func DeleteMember(context *gin.Context) {
 	var rows *sql.Rows
 	defer func() {
-		err := rows.Close()
-		if err != nil {
-			myerror.Raise500(context, err)
+		if rows != nil {
+			err := rows.Close()
+			if err != nil {
+				myerror.Raise500(context, err)
+			}
 		}
 	}()
 	groupId, err := strconv.ParseUint(context.Param("group_id"), 10, 64)
