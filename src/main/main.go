@@ -17,18 +17,20 @@ import (
 const HostURL = "192.168.31.177"
 
 var DB, _ = sql.Open("mysql", "root:123456@tcp(127.0.0.1:3306)/chat?parseTime=true")
-var Engine = gin.Default()
+var Engine = gin.New()
 var R = rand.New(rand.NewSource(time.Now().Unix()))
-var f, err = os.OpenFile("chat.log", os.O_RDWR, 0777)
+var f, err = os.OpenFile("chat.log", os.O_WRONLY, 0777)
 var LogFile = io.MultiWriter(f, os.Stdout)
 
 func main() {
+	gin.DefaultWriter = LogFile
+	gin.DefaultErrorWriter = LogFile
 	defer DB.Close()
 	if err != nil {
 		fmt.Println("文件打开错误：", err)
 		return
 	}
-	gin.DefaultWriter = LogFile
+	Engine.Use(gin.Logger(), gin.Recovery())
 	Engine.LoadHTMLGlob("templates/**/*")
 	users.DB = DB
 	users.R = R
