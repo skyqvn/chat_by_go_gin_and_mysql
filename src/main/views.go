@@ -29,12 +29,12 @@ func Index(context *gin.Context) {
 			}
 		}
 	}()
-	user, err := users.GetUser(context)
+	userId, err := users.GetUser(context)
 	if err != nil {
 		return
 	}
 	var sli []ChatGroupType
-	rows, err = DB.Query("select chatgroup from member where owner=?", user)
+	rows, err = DB.Query("select chatgroup from member where owner=?", userId)
 	if err != nil {
 		myerror.Raise404(context, err)
 		return
@@ -95,6 +95,19 @@ func ChatGroup(context *gin.Context) {
 		myerror.Raise500(context, err)
 		return
 	}
+	userId, err := users.GetUser(context)
+	if err != nil {
+		return
+	}
+	rows, err = DB.Query("select * from member where chatgroup=? and owner=?", groupId, userId)
+	if err != nil {
+		myerror.Raise500(context, err)
+		return
+	}
+	if !rows.Next() {
+		myerror.Raise404(context, fmt.Errorf("此聊天群中没有此用户"))
+		return
+	}
 	var group ChatGroupType
 	var reports []Ru
 	rows, err = DB.Query("select name,password,introduce,id from chatgroup where id=?", groupId)
@@ -120,8 +133,8 @@ func ChatGroup(context *gin.Context) {
 	}
 	for rows.Next() { //获得所有与当前群关联的消息以及发送消息的用户
 		r = Ru{}
-		err := rows.Scan(&r.R.ChatGroup, &r.R.UserID, &r.R.Value, &r.R.SendTime)
-		rs, err = DB.Query("select id,name,introduce from user where id=?", r.R.UserID)
+		err := rows.Scan(&r.R.ChatGroup, &r.R.UserId, &r.R.Value, &r.R.SendTime)
+		rs, err = DB.Query("select id,name,introduce from user where id=?", r.R.UserId)
 		if err != nil {
 			myerror.Raise500(context, err)
 			return
@@ -163,16 +176,17 @@ func SendMessage(context *gin.Context) {
 			myerror.Raise500(context, err)
 			return
 		}
-		var group uint64
-		rows, err = DB.Query("select id from chatgroup where id=?", form.ChatGroup)
+		form.UserId, err = users.GetUser(context)
 		if err != nil {
-			myerror.Raise404(context, err)
 			return
 		}
-		rows.Next()
-		err = rows.Scan(&group)
+		rows, err = DB.Query("select * from member where chatgroup=? and owner=?", form.ChatGroup, form.UserId)
 		if err != nil {
-			myerror.Raise404(context, err)
+			myerror.Raise500(context, err)
+			return
+		}
+		if !rows.Next() {
+			myerror.Raise404(context, fmt.Errorf("此聊天群中没有此用户"))
 			return
 		}
 		form.Value, ok = context.GetPostForm("value")
@@ -180,11 +194,7 @@ func SendMessage(context *gin.Context) {
 			myerror.Raise404(context, fmt.Errorf("SendMessage:无value字段"))
 			return
 		}
-		form.UserID, err = users.GetUser(context)
-		if err != nil {
-			return
-		}
-		_, err = DB.Exec("insert into report(chatgroup,userid,value) values (?,?,?)", form.ChatGroup, form.UserID, form.Value)
+		_, err = DB.Exec("insert into report(chatgroup,userid,value) values (?,?,?)", form.ChatGroup, form.UserId, form.Value)
 		if err != nil {
 			myerror.Raise404(context, err)
 			return
@@ -208,7 +218,7 @@ func JoinGroup(context *gin.Context) {
 			}
 		}
 	}()
-	user, err := users.GetUser(context)
+	userId, err := users.GetUser(context)
 	if err != nil {
 		return
 	}
@@ -238,7 +248,7 @@ func JoinGroup(context *gin.Context) {
 			myerror.Raise500(context, err)
 			return
 		}
-		rows, err = DB.Query("select * from member where chatgroup=? and owner=?", group.Id, user)
+		rows, err = DB.Query("select * from member where chatgroup=? and owner=?", group.Id, userId)
 		if err != nil {
 			myerror.Raise500(context, err)
 			return
@@ -259,7 +269,7 @@ func JoinGroup(context *gin.Context) {
 		}
 		if password == group.Password {
 			var member MemberType
-			member.Owner = user
+			member.Owner = userId
 			member.ChatGroup = group.Id
 			_, err := DB.Exec("insert into member(owner,chatgroup) values(?,?)", member.Owner, member.ChatGroup)
 			if err != nil {
