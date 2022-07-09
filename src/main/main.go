@@ -24,7 +24,8 @@ var f, err = os.Create(fmt.Sprint("./log/", t.Year(), ";", t.Month(), ";", t.Day
 var LogFile = io.MultiWriter(f, os.Stdout)
 
 func main() {
-	//gin.SetMode(gin.ReleaseMode)
+	DeleteLogOnTime()
+	gin.SetMode(gin.ReleaseMode)
 	if err != nil {
 		fmt.Println("文件打开错误：", err)
 		return
@@ -33,7 +34,9 @@ func main() {
 	gin.DefaultErrorWriter = LogFile
 	defer DB.Close()
 	defer f.Close()
-	Engine.Use(gin.Logger(), gin.Recovery())
+	Engine.Use(func(context *gin.Context) {
+		gin.LoggerWithWriter(LogFile)(context)
+	})
 	Engine.LoadHTMLGlob("templates/**/*")
 	users.DB = DB
 	users.R = R
