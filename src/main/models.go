@@ -11,7 +11,7 @@ type ChatGroupType struct {
 
 type ReportType struct {
 	ChatGroup uint64
-	UserId    uint64
+	Owner     uint64
 	Value     string
 	SendTime  time.Time
 }

@@ -126,15 +126,15 @@ func ChatGroup(context *gin.Context) {
 		myerror.Raise500(context, err)
 		return
 	}
-	rows, err = DB.Query("select chatgroup,userid,value,send_time from report where chatgroup=? order by send_time desc", groupId)
+	rows, err = DB.Query("select chatgroup,owner,value,send_time from report where chatgroup=? order by send_time desc", groupId)
 	if err != nil {
 		myerror.Raise404(context, err)
 		return
 	}
 	for rows.Next() { //获得所有与当前群关联的消息以及发送消息的用户
 		r = Ru{}
-		err := rows.Scan(&r.R.ChatGroup, &r.R.UserId, &r.R.Value, &r.R.SendTime)
-		rs, err = DB.Query("select id,name,introduce from user where id=?", r.R.UserId)
+		err := rows.Scan(&r.R.ChatGroup, &r.R.Owner, &r.R.Value, &r.R.SendTime)
+		rs, err = DB.Query("select id,name,introduce from user where id=?", r.R.Owner)
 		if err != nil {
 			myerror.Raise500(context, err)
 			return
@@ -176,11 +176,11 @@ func SendMessage(context *gin.Context) {
 			myerror.Raise500(context, err)
 			return
 		}
-		form.UserId, err = users.GetUser(context)
+		form.Owner, err = users.GetUser(context)
 		if err != nil {
 			return
 		}
-		rows, err = DB.Query("select * from member where chatgroup=? and owner=?", form.ChatGroup, form.UserId)
+		rows, err = DB.Query("select * from member where chatgroup=? and owner=?", form.ChatGroup, form.Owner)
 		if err != nil {
 			myerror.Raise500(context, err)
 			return
@@ -194,7 +194,7 @@ func SendMessage(context *gin.Context) {
 			myerror.Raise404(context, fmt.Errorf("SendMessage:无value字段"))
 			return
 		}
-		_, err = DB.Exec("insert into report(chatgroup,userid,value) values (?,?,?)", form.ChatGroup, form.UserId, form.Value)
+		_, err = DB.Exec("insert into report(chatgroup,owner,value) values (?,?,?)", form.ChatGroup, form.Owner, form.Value)
 		if err != nil {
 			myerror.Raise404(context, err)
 			return

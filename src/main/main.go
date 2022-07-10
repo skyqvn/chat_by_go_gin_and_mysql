@@ -24,7 +24,7 @@ var f, err = os.Create(fmt.Sprint("./log/", t.Year(), ";", t.Month(), ";", t.Day
 var LogFile = io.MultiWriter(f, os.Stdout)
 
 func main() {
-	DeleteLogOnTime()
+	CreateLogOnTime()
 	gin.SetMode(gin.ReleaseMode)
 	if err != nil {
 		fmt.Println("文件打开错误：", err)

@@ -9,7 +9,7 @@ import (
 	"time"
 )
 
-func DeleteLogOnTime() {
+func CreateLogOnTime() {
 	c := cron.New()
 	_, err := c.AddFunc("0 0 * * *", func() {
 		t = time.Now()
