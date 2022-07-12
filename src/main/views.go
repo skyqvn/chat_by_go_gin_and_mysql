@@ -1,6 +1,7 @@
 package main
 
 import (
+	. "config"
 	"database/sql"
 	"fmt"
 	"github.com/gin-gonic/gin"
@@ -15,9 +16,10 @@ func Index(context *gin.Context) {
 	var i int
 	var rs *sql.Rows
 	var cg ChatGroupType
+	var err error
 	defer func() {
 		if rows != nil {
-			err := rows.Close()
+			err = rows.Close()
 			if err != nil {
 				myerror.Raise500(context, err)
 			}
@@ -76,9 +78,10 @@ func ChatGroup(context *gin.Context) {
 	var rows *sql.Rows
 	var r Ru
 	var rs *sql.Rows
+	var err error
 	defer func() {
 		if rows != nil {
-			err := rows.Close()
+			err = rows.Close()
 			if err != nil {
 				myerror.Raise500(context, err)
 			}

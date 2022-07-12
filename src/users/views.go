@@ -1,6 +1,7 @@
 package users
 
 import (
+	. "config"
 	"database/sql"
 	"fmt"
 	"github.com/gin-gonic/gin"
@@ -149,7 +150,7 @@ func LoginFunc(context *gin.Context, form UserType, next string) error {
 		if err != nil {
 			return err
 		}
-		context.SetCookie("login_code", strconv.FormatUint(loginCode, 10), 604800, "/", LocalHost, false, true)
+		context.SetCookie("login_code", strconv.FormatUint(loginCode, 10), 604800, "/", HostURL, false, true)
 		context.Redirect(302, next)
 		return nil
 	}
@@ -211,7 +212,7 @@ func LoggedOut(context *gin.Context) {
 		return
 	}
 	if rows.Next() { //如果有此login_code
-		context.SetCookie("login_code", "", 0, "/", LocalHost, false, true)
+		context.SetCookie("login_code", "", 0, "/", HostURL, false, true)
 		context.HTML(200, "users/logged_out", nil)
 		return
 	}
