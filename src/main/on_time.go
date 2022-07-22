@@ -12,8 +12,9 @@ import (
 
 func CreateLogFile() {
 	T = time.Now()
-	fmt.Println(fmt.Sprint("create ./log/", T.Year(), ";", T.Month(), ";", T.Day(), " ", T.Hour(), ";", T.Minute(), ";", T.Second(), " chat.log"))
-	f, err := os.Create(fmt.Sprint("./log/", T.Year(), ";", T.Month(), ";", T.Day(), " ", T.Hour(), ";", T.Minute(), ";", T.Second(), " chat.log"))
+	fn := fmt.Sprint("./log/", T.Year(), "-", T.Month(), "-", T.Day(), " ", T.Hour(), "-", T.Minute(), "-", T.Second(), " chat.log")
+	fmt.Printf("create log file:%s", fn)
+	f, err := os.Create(fn)
 	if err != nil {
 		myerror.LogError(err)
 		return
