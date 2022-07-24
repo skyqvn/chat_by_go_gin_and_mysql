@@ -28,8 +28,18 @@ CREATE TABLE `chatgroup` (
   `introduce` char(200) CHARACTER SET utf8mb3 COLLATE utf8_general_ci DEFAULT NULL,
   `id` bigint unsigned NOT NULL AUTO_INCREMENT,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8mb3 ROW_FORMAT=DYNAMIC;
+) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8mb3 ROW_FORMAT=DYNAMIC;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `chatgroup`
+--
+
+LOCK TABLES `chatgroup` WRITE;
+/*!40000 ALTER TABLE `chatgroup` DISABLE KEYS */;
+INSERT INTO `chatgroup` VALUES ('sky','rtrt','',22);
+/*!40000 ALTER TABLE `chatgroup` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `member`
@@ -49,6 +59,16 @@ CREATE TABLE `member` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Dumping data for table `member`
+--
+
+LOCK TABLES `member` WRITE;
+/*!40000 ALTER TABLE `member` DISABLE KEYS */;
+INSERT INTO `member` VALUES (23,22);
+/*!40000 ALTER TABLE `member` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `report`
 --
 
@@ -57,15 +77,25 @@ DROP TABLE IF EXISTS `report`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `report` (
   `chatgroup` bigint unsigned NOT NULL,
-  `userid` bigint unsigned NOT NULL,
+  `owner` bigint unsigned NOT NULL,
   `value` text CHARACTER SET utf8mb3 COLLATE utf8_general_ci,
   `send_time` datetime DEFAULT CURRENT_TIMESTAMP,
   KEY `re_chatgroup` (`chatgroup`) USING BTREE,
-  KEY `userid` (`userid`) USING BTREE,
+  KEY `userid` (`owner`) USING BTREE,
   CONSTRAINT `re_chatgroup` FOREIGN KEY (`chatgroup`) REFERENCES `chatgroup` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT,
-  CONSTRAINT `userid` FOREIGN KEY (`userid`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT
+  CONSTRAINT `userid` FOREIGN KEY (`owner`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 ROW_FORMAT=DYNAMIC;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `report`
+--
+
+LOCK TABLES `report` WRITE;
+/*!40000 ALTER TABLE `report` DISABLE KEYS */;
+INSERT INTO `report` VALUES (22,23,'  trtr','2022-07-12 16:29:52'),(22,23,'ttttttyyyyytyytt','2022-07-12 16:29:59'),(22,23,'ffffffff','2022-07-12 16:30:05');
+/*!40000 ALTER TABLE `report` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `user`
@@ -81,9 +111,20 @@ CREATE TABLE `user` (
   `introduce` char(200) CHARACTER SET utf8mb3 COLLATE utf8_general_ci DEFAULT NULL,
   `login_code` bigint unsigned DEFAULT NULL,
   `last_login_time` datetime DEFAULT (now()),
-  PRIMARY KEY (`id`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb3 ROW_FORMAT=DYNAMIC;
+  PRIMARY KEY (`id`) USING BTREE,
+  KEY `idx_name_on_user` (`name`)
+) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=utf8mb3 ROW_FORMAT=DYNAMIC;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `user`
+--
+
+LOCK TABLES `user` WRITE;
+/*!40000 ALTER TABLE `user` DISABLE KEYS */;
+INSERT INTO `user` VALUES (21,'qwe','222','',11670850090484300300,'2022-07-08 09:39:15'),(22,'sky','2009917','',333468494817547474,'2022-07-08 09:40:12'),(23,'tttt','tttt','',16329263979041980907,'2022-07-12 16:29:34');
+/*!40000 ALTER TABLE `user` ENABLE KEYS */;
+UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -94,4 +135,4 @@ CREATE TABLE `user` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-07-07 19:09:07
+-- Dump completed on 2022-07-24 16:57:02
