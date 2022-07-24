@@ -11,7 +11,7 @@ import (
 	"time"
 )
 
-const HostURL = "192.168.31.177"
+const HostURL = "192.168.31.200"
 
 var DB, e1 = sql.Open("mysql", "root:123456@tcp(127.0.0.1:3306)/chat?parseTime=true")
 var Engine = gin.New()
