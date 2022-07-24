@@ -63,7 +63,7 @@ func GetUser(context *gin.Context) (uint64, error) {
 			return 0, err
 		}
 		if time.Now().Sub(lastLoginTime).Hours() > 168 {
-			_, err = DB.Exec("update user set login_code='' where id=?", id)
+			_, err = DB.Exec("update user set login_code=0 where id=?", id)
 			if err != nil {
 				myerror.Raise500(context, err)
 				return 0, err
@@ -146,7 +146,7 @@ func LoginFunc(context *gin.Context, form UserType, next string) error {
 				return err
 			}
 		}
-		_, err = DB.Exec("update user set login_code=? where name=? and password=?", loginCode, form.Name, form.Password)
+		_, err = DB.Exec("update user set login_code=?,last_login_time=? where name=? and password=?", loginCode, time.Now(), form.Name, form.Password)
 		if err != nil {
 			return err
 		}
@@ -261,19 +261,19 @@ func Register(context *gin.Context) {
 			myerror.Raise500(context, err)
 			return
 		}
-
+		
 		form.Password, ok = context.GetPostForm("password")
 		if !ok {
 			myerror.Raise500(context, fmt.Errorf("Register:无password字段"))
 			return
 		}
-
+		
 		password2, ok = context.GetPostForm("password2")
 		if !ok {
 			myerror.Raise500(context, fmt.Errorf("Register:无password2字段"))
 			return
 		}
-
+		
 		if password2 != form.Password {
 			context.HTML(200, "users/register", gin.H{
 				"form":    form,
@@ -281,7 +281,7 @@ func Register(context *gin.Context) {
 			})
 			return
 		}
-
+		
 		form.Introduce, ok = context.GetPostForm("introduce")
 		if !ok {
 			myerror.Raise500(context, fmt.Errorf("Register:无introduce字段"))
@@ -291,7 +291,7 @@ func Register(context *gin.Context) {
 		if !ok {
 			next = "/"
 		}
-
+		
 		_, err = DB.Exec("insert into user(name,password,introduce) values(?,?,?)", form.Name, form.Password, form.Introduce)
 		if err == nil {
 			//注册之后自动登录
