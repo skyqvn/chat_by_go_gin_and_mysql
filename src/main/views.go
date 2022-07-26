@@ -301,23 +301,31 @@ func CreateGroup(context *gin.Context) {
 		var ok bool
 		form.Name, ok = context.GetPostForm("name")
 		if !ok {
-			myerror.Raise404(context, fmt.Errorf("CreateGroup:无name字段"))
+			myerror.Raise500(context, fmt.Errorf("CreateGroup:无name字段"))
 			return
 		}
 		form.Password, ok = context.GetPostForm("password")
 		if !ok {
-			myerror.Raise404(context, fmt.Errorf("CreateGroup:无password字段"))
+			myerror.Raise500(context, fmt.Errorf("CreateGroup:无password字段"))
 			return
 		}
 		password, ok := context.GetPostForm("password2")
 		if !ok {
-			myerror.Raise404(context, fmt.Errorf("CreateGroup:无password2字段"))
+			myerror.Raise500(context, fmt.Errorf("CreateGroup:无password2字段"))
 			return
 		}
 		if form.Password != password {
 			context.HTML(200, "main/create_group", gin.H{
 				"form":    form,
 				"warning": "密码不匹配",
+			})
+			return
+		}
+		err := IsAValidChatGroupPassword(form.Password)
+		if err != nil {
+			context.HTML(200, "main/create_group", gin.H{
+				"form":    form,
+				"warning": err.Error(),
 			})
 			return
 		}
