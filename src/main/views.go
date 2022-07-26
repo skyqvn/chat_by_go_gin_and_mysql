@@ -111,6 +111,11 @@ func ChatGroup(context *gin.Context) {
 		myerror.Raise404(context, fmt.Errorf("此聊天群中没有此用户"))
 		return
 	}
+	err = rows.Close()
+	if err != nil {
+		myerror.Raise500(context, err)
+		return
+	}
 	var group ChatGroupType
 	var reports []Ru
 	rows, err = DB.Query("select name,password,introduce,id from chatgroup where id=?", groupId)
