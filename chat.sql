@@ -28,7 +28,7 @@ CREATE TABLE `chatgroup` (
   `introduce` char(200) CHARACTER SET utf8mb3 COLLATE utf8_general_ci DEFAULT NULL,
   `id` bigint unsigned NOT NULL AUTO_INCREMENT,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8mb3 ROW_FORMAT=DYNAMIC;
+) ENGINE=InnoDB AUTO_INCREMENT=32 DEFAULT CHARSET=utf8mb3 ROW_FORMAT=DYNAMIC;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -37,7 +37,7 @@ CREATE TABLE `chatgroup` (
 
 LOCK TABLES `chatgroup` WRITE;
 /*!40000 ALTER TABLE `chatgroup` DISABLE KEYS */;
-INSERT INTO `chatgroup` VALUES ('sky','rtrt','',22);
+INSERT INTO `chatgroup` VALUES ('sky','rtrt','',22),('sky','1111','',26),('sky','----','',27),('sky','123-','',28),('sky','1','11',29),('sky','12345678','',30),('sky','__________','',31);
 /*!40000 ALTER TABLE `chatgroup` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -64,7 +64,7 @@ CREATE TABLE `member` (
 
 LOCK TABLES `member` WRITE;
 /*!40000 ALTER TABLE `member` DISABLE KEYS */;
-INSERT INTO `member` VALUES (23,22);
+INSERT INTO `member` VALUES (23,22),(22,26),(22,27),(22,28),(22,29),(22,30),(22,31);
 /*!40000 ALTER TABLE `member` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -122,7 +122,7 @@ CREATE TABLE `user` (
 
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` VALUES (21,'qwe','222','',11670850090484300300,'2022-07-08 09:39:15'),(22,'sky','2009917','',333468494817547474,'2022-07-08 09:40:12'),(23,'tttt','tttt','',16329263979041980907,'2022-07-12 16:29:34');
+INSERT INTO `user` VALUES (21,'qwe','222','',1321432352,'2022-07-08 09:39:15'),(22,'sky','2009917','',10207340356411239215,'2022-08-03 03:16:52'),(23,'tttt','tttt','',1321432352,'2022-07-08 09:39:15');
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -135,4 +135,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-07-24 16:57:02
+-- Dump completed on 2022-08-03 11:37:16

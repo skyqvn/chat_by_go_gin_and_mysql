@@ -33,7 +33,7 @@ func main() {
 		homePage.Any("join_group/:group_id", JoinGroup)
 		homePage.Any("create_group", CreateGroup)
 		homePage.GET("delete_member/:group_id", DeleteMember)
-		homePage.GET("search_group", Search)
+		homePage.Any("search", Search)
 	}
 	user := Engine.Group("user/")
 	{

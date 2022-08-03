@@ -8,6 +8,7 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 	"myerror"
 	"strconv"
+	"strings"
 	"users"
 )
 
@@ -41,7 +42,7 @@ func Index(context *gin.Context) {
 		myerror.Raise404(context, err)
 		return
 	}
-	for rows.Next() { //得到所有与当前用户ID匹配的聊天群
+	for rows.Next() { // 得到所有与当前用户ID匹配的聊天群
 		err = rows.Scan(&i)
 		if err != nil {
 			myerror.Raise404(context, err)
@@ -108,7 +109,7 @@ func ChatGroup(context *gin.Context) {
 		return
 	}
 	if !rows.Next() {
-		myerror.Raise404(context, fmt.Errorf("此聊天群中没有此用户"))
+		context.Redirect(302, "/join_group/"+strconv.FormatUint(groupId, 10))
 		return
 	}
 	err = rows.Close()
@@ -139,7 +140,7 @@ func ChatGroup(context *gin.Context) {
 		myerror.Raise404(context, err)
 		return
 	}
-	for rows.Next() { //获得所有与当前群关联的消息以及发送消息的用户
+	for rows.Next() { // 获得所有与当前群关联的消息以及发送消息的用户
 		r = Ru{}
 		err := rows.Scan(&r.R.ChatGroup, &r.R.Owner, &r.R.Value, &r.R.SendTime)
 		rs, err = DB.Query("select id,name,introduce from user where id=?", r.R.Owner)
@@ -194,7 +195,7 @@ func SendMessage(context *gin.Context) {
 			return
 		}
 		if !rows.Next() {
-			myerror.Raise404(context, fmt.Errorf("此聊天群中没有此用户"))
+			context.Redirect(302, "/join_group/"+strconv.FormatUint(form.ChatGroup, 10))
 			return
 		}
 		form.Value, ok = context.GetPostForm("value")
@@ -210,7 +211,7 @@ func SendMessage(context *gin.Context) {
 		context.Redirect(302, "/chatgroup/"+context.Param("group_id"))
 		return
 	}
-	//如果请求不是post
+	// 如果请求不是post
 	myerror.Raise500(context, fmt.Errorf("SendMessage:请求方法错误"))
 }
 
@@ -386,20 +387,19 @@ func DeleteMember(context *gin.Context) {
 		myerror.Raise404(context, err)
 		return
 	}
-	//查看rows长度是否为零
+	// 查看rows长度是否为零
 	ok := rows.Next()
 	err = rows.Close()
 	if err != nil {
 		myerror.Raise500(context, err)
 		return
 	}
-	if !ok { //如果长度为零
+	if !ok { // 如果长度为零
 		myerror.Raise404(context, fmt.Errorf("DeleteMember:长度为零"))
 		return
-	} else { //如果长度不为零
+	} else { // 如果长度不为零
 		_, err = DB.Exec("delete from member where chatgroup=?", groupId)
 		if err != nil {
-
 			myerror.Raise500(context, err)
 			return
 		}
@@ -414,8 +414,8 @@ func DeleteMember(context *gin.Context) {
 			myerror.Raise500(context, err)
 			return
 		}
-		if !ok { //如果聊天室没有人了
-			_, err = DB.Exec("delete from chatgroup where id=?", groupId) //删除聊天室
+		if !ok { // 如果聊天室没有人了
+			_, err = DB.Exec("delete from chatgroup where id=?", groupId) // 删除聊天室
 			if err != nil {
 				myerror.Raise500(context, err)
 				return
@@ -426,5 +426,66 @@ func DeleteMember(context *gin.Context) {
 }
 
 func Search(context *gin.Context) {
-	context.HTML(200, "main/search", nil)
+	var rows *sql.Rows
+	defer func() {
+		if rows != nil {
+			err := rows.Close()
+			if err != nil {
+				myerror.Raise500(context, err)
+			}
+		}
+	}()
+	var chatgroups = make([]ChatGroupType, 0)
+	var searchValue string
+	var group ChatGroupType
+	var s string
+	var ok bool
+	if context.Request.Method == "POST" {
+		s, ok = context.GetPostForm("search_value")
+		if !ok {
+			myerror.Raise500(context, fmt.Errorf("Search:无search_value字段"))
+			return
+		}
+		searchValue = "%" + strings.ReplaceAll(s, "%", "\\%") + "%"
+
+		// 按ID搜索
+		i, err := strconv.ParseInt(s, 10, 64)
+		if err != nil {
+			goto searchValueIsNotANumber
+		}
+		rows, err = DB.Query("select id,name, introduce,password from chatgroup where id=?", i)
+		if err != nil {
+			myerror.Raise500(context, err)
+			return
+		}
+		for rows.Next() {
+			err = rows.Scan(&group.Id, &group.Name, &group.Introduce, &group.Password)
+			if err != nil {
+				myerror.Raise500(context, err)
+				return
+			}
+			chatgroups = append(chatgroups, group)
+		}
+	searchValueIsNotANumber:
+
+		// 按名称搜索
+		rows, err = DB.Query("select id,name, introduce,password from chatgroup where name like ?", searchValue)
+		if err != nil {
+			myerror.Raise500(context, err)
+			return
+		}
+
+		for rows.Next() {
+			err = rows.Scan(&group.Id, &group.Name, &group.Introduce, &group.Password)
+			if err != nil {
+				myerror.Raise500(context, err)
+				return
+			}
+			chatgroups = append(chatgroups, group)
+		}
+	}
+	context.HTML(200, "main/search", gin.H{
+		"chatgroups":   chatgroups,
+		"search_value": s,
+	})
 }

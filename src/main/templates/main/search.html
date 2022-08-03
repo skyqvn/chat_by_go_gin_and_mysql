@@ -3,17 +3,29 @@
 {{template "base" . }}
 
 <head>
-	<title>
-		搜索
-	</title>
-	<script>
-		function join() {
-			location.href = '/join_group/' + document.getElementById('search').value;
-		}
-	</script>
+    <title>
+        搜索
+    </title>
 </head>
 
-群聊ID:
-<input id="search"/>
-<button onclick="join()">加入</button>
+<form action="/search" method="post">
+    群聊ID/名称:<input name="search_value" value="{{.search_value}}"/>
+    <button>搜索</button>
+</form>
+
+<hr/>
+
+{{range .chatgroups}}
+<a href="/chatgroup/{{.Id}}">
+    <h2>
+        <img src="/static_file/group_icon.png" style="height:30px;width:30px;position:relative;top:9px"/><span
+            style="position:relative;left:10px">{{.Name}}</span>
+    </h2></a><span style="font-size:1px;color:grey;">&nbsp&nbspid:{{.Id}}</span>
+<button onclick=delete_member({{.Id}}) style="position:absolute;right:15px;">删除</button>
+<pre style="font-size:15px;"> {{.Introduce}}</pre>
+<hr/>
 {{end}}
+
+{{end}}
+
+

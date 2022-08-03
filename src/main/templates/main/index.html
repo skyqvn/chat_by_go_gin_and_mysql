@@ -3,24 +3,24 @@
 {{template "base" . }}
 
 <head>
-	<title>
-		主页
-	</title>
+    <title>
+        主页
+    </title>
 </head>
 
 <script>
-	function delete_member(groupId) {
-		if (confirm('是否删除')) {
-			location.href = '/delete_member/' + groupId;
-		}
-	};
+    function delete_member(groupId) {
+        if (confirm('是否删除')) {
+            location.href = '/delete_member/' + groupId;
+        }
+    };
 </script>
 
 <h1>欢迎来到畅聊</h1>
 <br/>
 
-<a href="/search_group"><img src="/static_file/search_icon.png"
-                             style="position:absolute;right:10px;width:25px;height:25px;border-style:solid;border-width:1px;border-color:#000000"/></a>
+<a href="/search"><img src="/static_file/search_icon.png"
+                       style="position:absolute;right:10px;width:25px;height:25px;border-style:solid;border-width:1px;border-color:#000000"/></a>
 
 <a href="/create_group"><img src="/static_file/create_group_icon.png"
                              style="position:absolute;right:50px;width:25px;height:25px;border-style:solid;border-width:1px;border-color:#000000"/></a>
@@ -28,10 +28,10 @@
 <hr/>
 {{range .chatgroups}}
 <a href="/chatgroup/{{.Id}}">
-	<h2>
-		<img src="/static_file/group_icon.png" style="height:30px;width:30px;position:relative;top:9px"/><span
-			style="position:relative;left:10px">{{.Name}}</span>
-	</h2></a><span style="font-size:1px;color:grey;">&nbsp&nbspid:{{.Id}}</span>
+    <h2>
+        <img src="/static_file/group_icon.png" style="height:30px;width:30px;position:relative;top:9px"/><span
+            style="position:relative;left:10px">{{.Name}}</span>
+    </h2></a><span style="font-size:1px;color:grey;">&nbsp&nbspid:{{.Id}}</span>
 <button onclick=delete_member({{.Id}}) style="position:absolute;right:15px;">删除</button>
 <pre style="font-size:15px;"> {{.Introduce}}</pre>
 <br/>

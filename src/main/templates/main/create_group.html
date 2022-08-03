@@ -5,31 +5,31 @@
 <h3>{{.warning}}</h3>
 
 <head>
-	<title>创建聊天群</title>
+    <title>创建聊天群</title>
 </head>
 <form action="/create_group" method="post">
-	<p>
-		<label for="name">名称:</label>
-		<input type="text" name="name" value="{{.form.Name}}" maxlength="25" required id="name">
-	</p>
-	
-	<p>
-		<label for="password1">密码:</label>
-		<input type="password" name="password" value="{{.form.Password}}" maxlength="20" required id="password1">
-	</p>
-	
-	<p>
-		<label for="password2">确认密码:</label>
-		<input type="password" name="password2" maxlength="20" required id="password2">
-	</p>
-	
-	<p>
-		<label for="introduce">简介:</label>
-		<textarea name="introduce" cols="40" rows="10" maxlength="200"
-		          id="introduce">{{.form.Introduce}}</textarea>
-	</p>
-	
-	<button>提交</button>
+    <p>
+        <label for="name">名称:</label>
+        <input type="text" name="name" value="{{.form.Name}}" maxlength="25" required id="name">
+    </p>
+
+    <p>
+        <label for="password1">密码:</label>
+        <input type="password" name="password" value="{{.form.Password}}" maxlength="20" required id="password1">
+    </p>
+
+    <p>
+        <label for="password2">确认密码:</label>
+        <input type="password" name="password2" maxlength="20" required id="password2">
+    </p>
+
+    <p>
+        <label for="introduce">简介:</label>
+        <textarea name="introduce" cols="40" rows="10" maxlength="200"
+                  id="introduce">{{.form.Introduce}}</textarea>
+    </p>
+
+    <button>提交</button>
 </form>
 
 {{end}}
