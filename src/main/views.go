@@ -289,7 +289,7 @@ func JoinGroup(context *gin.Context) {
 			return
 		}
 	}
-
+	
 	context.HTML(200, "main/join_group", gin.H{
 		"password": password,
 		"group":    group,
@@ -447,7 +447,7 @@ func Search(context *gin.Context) {
 			return
 		}
 		searchValue = "%" + strings.ReplaceAll(s, "%", "\\%") + "%"
-
+		
 		// 按ID搜索
 		i, err := strconv.ParseInt(s, 10, 64)
 		if err != nil {
@@ -467,14 +467,14 @@ func Search(context *gin.Context) {
 			chatgroups = append(chatgroups, group)
 		}
 	searchValueIsNotANumber:
-
+		
 		// 按名称搜索
 		rows, err = DB.Query("select id,name, introduce,password from chatgroup where name like ?", searchValue)
 		if err != nil {
 			myerror.Raise500(context, err)
 			return
 		}
-
+		
 		for rows.Next() {
 			err = rows.Scan(&group.Id, &group.Name, &group.Introduce, &group.Password)
 			if err != nil {

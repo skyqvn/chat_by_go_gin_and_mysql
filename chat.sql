@@ -32,16 +32,6 @@ CREATE TABLE `chatgroup` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `chatgroup`
---
-
-LOCK TABLES `chatgroup` WRITE;
-/*!40000 ALTER TABLE `chatgroup` DISABLE KEYS */;
-INSERT INTO `chatgroup` VALUES ('sky','rtrt','',22),('sky','1111','',26),('sky','----','',27),('sky','123-','',28),('sky','1','11',29),('sky','12345678','',30),('sky','__________','',31);
-/*!40000 ALTER TABLE `chatgroup` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `member`
 --
 
@@ -57,16 +47,6 @@ CREATE TABLE `member` (
   CONSTRAINT `owner` FOREIGN KEY (`owner`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 ROW_FORMAT=DYNAMIC;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `member`
---
-
-LOCK TABLES `member` WRITE;
-/*!40000 ALTER TABLE `member` DISABLE KEYS */;
-INSERT INTO `member` VALUES (23,22),(22,26),(22,27),(22,28),(22,29),(22,30),(22,31);
-/*!40000 ALTER TABLE `member` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `report`
@@ -88,16 +68,6 @@ CREATE TABLE `report` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `report`
---
-
-LOCK TABLES `report` WRITE;
-/*!40000 ALTER TABLE `report` DISABLE KEYS */;
-INSERT INTO `report` VALUES (22,23,'  trtr','2022-07-12 16:29:52'),(22,23,'ttttttyyyyytyytt','2022-07-12 16:29:59'),(22,23,'ffffffff','2022-07-12 16:30:05');
-/*!40000 ALTER TABLE `report` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `user`
 --
 
@@ -115,16 +85,6 @@ CREATE TABLE `user` (
   KEY `idx_name_on_user` (`name`)
 ) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=utf8mb3 ROW_FORMAT=DYNAMIC;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `user`
---
-
-LOCK TABLES `user` WRITE;
-/*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` VALUES (21,'qwe','222','',1321432352,'2022-07-08 09:39:15'),(22,'sky','2009917','',10207340356411239215,'2022-08-03 03:16:52'),(23,'tttt','tttt','',1321432352,'2022-07-08 09:39:15');
-/*!40000 ALTER TABLE `user` ENABLE KEYS */;
-UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -135,4 +95,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-08-03 11:37:16
+-- Dump completed on 2022-08-05  9:05:58
