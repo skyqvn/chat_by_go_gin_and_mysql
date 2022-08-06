@@ -150,7 +150,7 @@ func LoginFunc(context *gin.Context, form UserType, next string) error {
 		if err != nil {
 			return err
 		}
-		context.SetCookie("login_code", strconv.FormatUint(loginCode, 10), 604800, "/", HostURL, false, true)
+		context.SetCookie("login_code", strconv.FormatUint(loginCode, 10), 604800, "/", Address, false, true)
 		context.Redirect(302, next)
 		return nil
 	}

@@ -59,7 +59,7 @@ func LoggedOut(context *gin.Context) {
 		return
 	}
 	if rows.Next() { //如果有此login_code
-		context.SetCookie("login_code", "", 0, "/", HostURL, false, true)
+		context.SetCookie("login_code", "", 0, "/", Address, false, true)
 		context.HTML(200, "users/logged_out", nil)
 		return
 	}
