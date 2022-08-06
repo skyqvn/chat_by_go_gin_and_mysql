@@ -48,3 +48,10 @@ func LogError(err error) {
 		fmt.Println("LogError:无法写入", err)
 	}
 }
+
+func Write(s string) {
+	_, err := gin.DefaultWriter.Write([]byte(s + "\n"))
+	if err != nil {
+		fmt.Println("Write:无法写入", err)
+	}
+}

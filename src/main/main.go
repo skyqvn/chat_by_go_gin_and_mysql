@@ -7,10 +7,13 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 	"myerror"
 	"net/http"
+	"os/signal"
+	"syscall"
 	"users"
 )
 
 func main() {
+	var err error
 	gin.SetMode(gin.ReleaseMode)
 	DoSthOnTime()
 	gin.DefaultWriter = LogFile
@@ -43,7 +46,26 @@ func main() {
 	}
 	Engine.StaticFS("/static_file", http.Dir("static_file"))
 	Engine.NoRoute(myerror.CRaise404)
-	err := Engine.Run("0.0.0.0:80")
+	signal.Notify(Quit, syscall.SIGINT, syscall.SIGQUIT)
+	go func() {
+		for {
+			<-Quit
+			myerror.Write("检测到退出信号")
+		invalidInput:
+			var s string
+			fmt.Println("确定退出吗？(y,n):")
+			fmt.Scanln(&s)
+			if s == "y" || s == "Y" {
+				QuitFunc()
+			} else if s == "n" || s == "N" {
+				fmt.Println("取消了退出")
+				continue
+			} else {
+				goto invalidInput
+			}
+		}
+	}()
+	err = Engine.Run("0.0.0.0:80")
 	if err != nil {
 		_, err = gin.DefaultWriter.Write([]byte(err.Error()))
 		if err != nil {

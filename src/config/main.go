@@ -19,6 +19,7 @@ var R = rand.New(rand.NewSource(time.Now().Unix()))
 var T = time.Now()
 var F, e2 = os.Create(fmt.Sprint("./log/", T.Year(), ";", T.Month(), ";", T.Day(), " ", T.Hour(), ";", T.Minute(), ";", T.Second(), " chat.log"))
 var LogFile = io.MultiWriter(F, os.Stdout)
+var Quit = make(chan os.Signal)
 
 func init() {
 	if e1 != nil {
