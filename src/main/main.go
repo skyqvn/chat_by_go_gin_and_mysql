@@ -70,6 +70,5 @@ func main() {
 	if err != nil {
 		myerror.Write(err.Error())
 		myerror.Write("程序在" + time.Now().String() + "完成关闭，即将退出")
-		return
 	}
 }
