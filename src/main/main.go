@@ -9,6 +9,7 @@ import (
 	"net/http"
 	"os/signal"
 	"syscall"
+	"time"
 	"users"
 )
 
@@ -65,11 +66,10 @@ func main() {
 			}
 		}
 	}()
-	err = Engine.Run("0.0.0.0:80")
+	err = Srv.ListenAndServe()
 	if err != nil {
-		_, err = gin.DefaultWriter.Write([]byte(err.Error()))
-		if err != nil {
-			fmt.Println("无法写入")
-		}
+		myerror.Write(err.Error())
+		myerror.Write("程序在" + time.Now().String() + "完成关闭，即将退出")
+		return
 	}
 }
