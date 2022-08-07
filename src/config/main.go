@@ -7,6 +7,7 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 	"io"
 	"math/rand"
+	"net/http"
 	"os"
 	"time"
 )
@@ -15,6 +16,10 @@ const Address = "192.168.31.200"
 
 var DB, e1 = sql.Open("mysql", "root:123456@tcp(127.0.0.1:3306)/chat?parseTime=true")
 var Engine = gin.New()
+var Srv = &http.Server{
+	Addr:    "0.0.0.0:80",
+	Handler: Engine,
+}
 var R = rand.New(rand.NewSource(time.Now().Unix()))
 var T = time.Now()
 var F, e2 = os.Create(fmt.Sprint("./log/", T.Year(), ";", T.Month(), ";", T.Day(), " ", T.Hour(), ";", T.Minute(), ";", T.Second(), " chat.log"))
