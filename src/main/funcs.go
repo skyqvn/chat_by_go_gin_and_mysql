@@ -2,6 +2,7 @@ package main
 
 import "fmt"
 
+// 验证密码是否合法的函数
 func IsAValidChatGroupPassword(password string) error {
 	charList := [...]byte{
 		'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'k', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
@@ -13,6 +14,9 @@ func IsAValidChatGroupPassword(password string) error {
 	if len(password) < 8 {
 		return fmt.Errorf("密码长度不能少于八个字符")
 	}
+
+	// 判断密码的每一个字符是否都在charList中
+	// 如果检测到任何一个字符不在当中，则返回错误
 	for i := 0; i < len(password); i++ {
 		ok := false
 		for j := 0; j < len(charList); j++ {

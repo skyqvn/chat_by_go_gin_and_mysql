@@ -161,6 +161,7 @@ func LoginFunc(context *gin.Context, form UserType, next string) error {
 	return fmt.Errorf("LoginFunc:密码错误")
 }
 
+// 验证密码是否合法的函数
 func IsAValidChatGroupPassword(password string) error {
 	charList := [...]byte{
 		'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'k', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',

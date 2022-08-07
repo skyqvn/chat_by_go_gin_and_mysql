@@ -7,6 +7,7 @@ import (
 	"time"
 )
 
+// 退出函数
 func QuitFunc() {
 	myerror.Write("程序在" + time.Now().String() + "关闭")
 	DB.Close()

@@ -58,7 +58,7 @@ func LoggedOut(context *gin.Context) {
 		myerror.Raise404(context, err)
 		return
 	}
-	if rows.Next() { //如果有此login_code
+	if rows.Next() { // 如果有此login_code
 		context.SetCookie("login_code", "", 0, "/", Address, false, true)
 		context.HTML(200, "users/logged_out", nil)
 		return
@@ -101,7 +101,7 @@ func Register(context *gin.Context) {
 			myerror.Raise404(context, err)
 			return
 		}
-		if rows.Next() { //如果已经有此名用户了
+		if rows.Next() { // 如果已经有此名用户了
 			context.HTML(200, "users/register", gin.H{
 				"form":    form,
 				"warning": "已有此名用户",
@@ -146,7 +146,7 @@ func Register(context *gin.Context) {
 
 		_, err = DB.Exec("insert into user(name,password,introduce) values(?,?,?)", form.Name, form.Password, form.Introduce)
 		if err == nil {
-			//注册之后自动登录
+			// 注册之后自动登录
 			err = LoginFunc(context, form, next)
 			if err == nil {
 				context.Redirect(302, "/")

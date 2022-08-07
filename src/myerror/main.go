@@ -5,6 +5,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// 报告401错误，显示待登录页面
 func Raise401(context *gin.Context, err error) {
 	_, err = gin.DefaultWriter.Write([]byte(fmt.Sprintln("401ERROR:", err.Error())))
 	if err != nil {
@@ -13,6 +14,7 @@ func Raise401(context *gin.Context, err error) {
 	context.HTML(401, "myerror/401error", nil)
 }
 
+// 报告404错误
 func Raise404(context *gin.Context, err error) {
 	fmt.Println("404ERROR:", err.Error())
 	_, err = gin.DefaultWriter.Write([]byte(fmt.Sprintln("404ERROR:", err.Error())))
@@ -22,6 +24,7 @@ func Raise404(context *gin.Context, err error) {
 	context.HTML(404, "myerror/404error", nil)
 }
 
+// 报告500错误
 func Raise500(context *gin.Context, err error) {
 	_, err = gin.DefaultWriter.Write([]byte(fmt.Sprintln("500ERROR:", err.Error())))
 	if err != nil {
@@ -30,10 +33,12 @@ func Raise500(context *gin.Context, err error) {
 	context.HTML(500, "myerror/500error", nil)
 }
 
+// 路由的NoRoute函数
 func CRaise404(context *gin.Context) {
 	Raise404(context, fmt.Errorf("Underfined path %s", context.Request.RequestURI))
 }
 
+// 向用户显示警告并向日志文件和控制台输出
 func ShowWarning(context *gin.Context, err error, s string) {
 	context.HTML(200, "myerror/show_warning", s)
 	_, err = gin.DefaultWriter.Write([]byte(fmt.Sprintln("ShowWarning:", err.Error())))
@@ -42,6 +47,7 @@ func ShowWarning(context *gin.Context, err error, s string) {
 	}
 }
 
+// 用于向日志文件和控制台输出错误
 func LogError(err error) {
 	_, err = gin.DefaultWriter.Write([]byte(fmt.Sprintln("LogError:", err.Error())))
 	if err != nil {
@@ -49,6 +55,7 @@ func LogError(err error) {
 	}
 }
 
+// 用于向日志文件和控制台输出
 func Write(s string) {
 	_, err := gin.DefaultWriter.Write([]byte(s + "\n"))
 	if err != nil {
