@@ -9,6 +9,7 @@ import (
 )
 
 // 退出函数
+// 用于在退出时进行资源的关闭并等待剩余服务完成
 func QuitFunc() {
 	myerror.Write("程序在" + time.Now().String() + "关闭")
 	DB.Close()
