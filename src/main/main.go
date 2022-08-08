@@ -56,6 +56,7 @@ func main() {
 			var s string
 			fmt.Println("确定退出吗？(y,n):")
 			fmt.Scanln(&s)
+			fmt.Println(s)
 			if s == "y" || s == "Y" {
 				QuitFunc()
 			} else if s == "n" || s == "N" {
