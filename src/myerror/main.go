@@ -3,11 +3,14 @@ package myerror
 import (
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"time"
 )
 
 // 报告401错误，显示待登录页面
 func Raise401(context *gin.Context, err error) {
-	_, err = gin.DefaultWriter.Write([]byte(fmt.Sprintln("401ERROR:", err.Error())))
+	now := time.Now()
+	ts := fmt.Sprint(now.Year(), "/", now.Month(), "/", now.Day(), " - ", now.Hour(), ":", now.Minute(), ":", now.Second(), " ")
+	_, err = gin.DefaultWriter.Write([]byte(fmt.Sprintln("[INFO] ", ts, "401ERROR:", err.Error())))
 	if err != nil {
 		fmt.Println("Raise401:无法写入", err)
 	}
@@ -16,8 +19,9 @@ func Raise401(context *gin.Context, err error) {
 
 // 报告404错误
 func Raise404(context *gin.Context, err error) {
-	fmt.Println("404ERROR:", err.Error())
-	_, err = gin.DefaultWriter.Write([]byte(fmt.Sprintln("404ERROR:", err.Error())))
+	now := time.Now()
+	ts := fmt.Sprint(now.Year(), "/", now.Month(), "/", now.Day(), " - ", now.Hour(), ":", now.Minute(), ":", now.Second(), " ")
+	_, err = gin.DefaultWriter.Write([]byte(fmt.Sprintln("[INFO] ", ts, "404ERROR:", err.Error())))
 	if err != nil {
 		fmt.Println("Raise404:无法写入", err)
 	}
@@ -26,7 +30,9 @@ func Raise404(context *gin.Context, err error) {
 
 // 报告500错误
 func Raise500(context *gin.Context, err error) {
-	_, err = gin.DefaultWriter.Write([]byte(fmt.Sprintln("500ERROR:", err.Error())))
+	now := time.Now()
+	ts := fmt.Sprint(now.Year(), "/", now.Month(), "/", now.Day(), " - ", now.Hour(), ":", now.Minute(), ":", now.Second(), " ")
+	_, err = gin.DefaultWriter.Write([]byte(fmt.Sprintln("[INFO] ", ts, "500ERROR:", err.Error())))
 	if err != nil {
 		fmt.Println("Raise500:无法写入", err)
 	}
@@ -41,7 +47,9 @@ func CRaise404(context *gin.Context) {
 // 向用户显示警告并向日志文件和控制台输出
 func ShowWarning(context *gin.Context, err error, s string) {
 	context.HTML(200, "myerror/show_warning", s)
-	_, err = gin.DefaultWriter.Write([]byte(fmt.Sprintln("ShowWarning:", err.Error())))
+	now := time.Now()
+	ts := fmt.Sprint(now.Year(), "/", now.Month(), "/", now.Day(), " - ", now.Hour(), ":", now.Minute(), ":", now.Second(), " ")
+	_, err = gin.DefaultWriter.Write([]byte(fmt.Sprintln("[INFO] ", ts, "ShowWarning:", err.Error())))
 	if err != nil {
 		fmt.Println("ShowWarning:无法写入", err)
 	}
@@ -49,7 +57,9 @@ func ShowWarning(context *gin.Context, err error, s string) {
 
 // 用于向日志文件和控制台输出错误
 func LogError(err error) {
-	_, err = gin.DefaultWriter.Write([]byte(fmt.Sprintln("LogError:", err.Error())))
+	now := time.Now()
+	ts := fmt.Sprint(now.Year(), "/", now.Month(), "/", now.Day(), " - ", now.Hour(), ":", now.Minute(), ":", now.Second(), " ")
+	_, err = gin.DefaultWriter.Write([]byte(fmt.Sprintln("[INFO] ", ts, "LogError:", err.Error())))
 	if err != nil {
 		fmt.Println("LogError:无法写入", err)
 	}
@@ -57,7 +67,9 @@ func LogError(err error) {
 
 // 用于向日志文件和控制台输出
 func Write(s string) {
-	_, err := gin.DefaultWriter.Write([]byte(s + "\n"))
+	now := time.Now()
+	ts := fmt.Sprint(now.Year(), "/", now.Month(), "/", now.Day(), " - ", now.Hour(), ":", now.Minute(), ":", now.Second(), " ")
+	_, err := gin.DefaultWriter.Write([]byte(fmt.Sprintln("[INFO] " + ts + "Write:" + s + "\n")))
 	if err != nil {
 		fmt.Println("Write:无法写入", err)
 	}
