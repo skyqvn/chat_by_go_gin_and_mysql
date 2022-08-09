@@ -12,12 +12,11 @@ import (
 	"time"
 )
 
-const Address = "192.168.31.200"
-
+var URL string
+var ServerAddr string
 var DB, e1 = sql.Open("mysql", "root:123456@tcp(127.0.0.1:3306)/chat?parseTime=true")
 var Engine = gin.New()
 var Srv = &http.Server{
-	Addr:    "0.0.0.0:80",
 	Handler: Engine,
 }
 var R = rand.New(rand.NewSource(time.Now().Unix()))
@@ -35,4 +34,5 @@ func init() {
 		fmt.Println("文件打开错误：", e2.Error())
 		return
 	}
+	ReadConfig()
 }
