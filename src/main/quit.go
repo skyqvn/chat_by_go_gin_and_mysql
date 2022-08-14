@@ -13,9 +13,7 @@ import (
 func QuitFunc() {
 	myerror.Write("程序在" + time.Now().String() + "关闭")
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
-	if err := Srv.Shutdown(ctx); err != nil {
-		myerror.Write(err.Error())
-	}
+	Srv.Shutdown(ctx)
 	DB.Close()
 	cancel()
 	myerror.Write("程序在" + time.Now().String() + "完成关闭，即将退出")

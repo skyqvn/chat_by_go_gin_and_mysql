@@ -9,7 +9,6 @@ import (
 	"net/http"
 	"os/signal"
 	"syscall"
-	"time"
 	"users"
 )
 
@@ -56,7 +55,6 @@ func main() {
 			var s string
 			fmt.Println("确定退出吗？(y,n):")
 			fmt.Scanln(&s)
-			fmt.Println(s)
 			if s == "y" || s == "Y" {
 				QuitFunc()
 			} else if s == "n" || s == "N" {
@@ -67,9 +65,9 @@ func main() {
 			}
 		}
 	}()
-	err=Srv.ListenAndServe()
+	err = Srv.ListenAndServe()
 	if err != nil {
 		myerror.Write(err.Error())
-		myerror.Write("程序在" + time.Now().String() + "完成关闭，即将退出")
 	}
+	select {}
 }
