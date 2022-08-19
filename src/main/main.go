@@ -28,6 +28,10 @@ func main() {
 	Engine.GET("/favicon.ico", func(context *gin.Context) {
 		context.File("./static_file/group_icon.ico")
 	})
+	// 测试服务器连通
+	Engine.GET("/ping", func(ctx *gin.Context) {
+		ctx.String(200, "ok")
+	})
 	homePage := Engine.Group("/", users.IsLogin)
 	{
 		homePage.GET("", Index)
