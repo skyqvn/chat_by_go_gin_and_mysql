@@ -34,7 +34,7 @@
 	- 将conf.json更改为自己需要的配置
 		- Port：服务的端口
 		- ServerAddr：服务地址（127.0.0.1为本地，0.0.0.0为公开）
-		- URL：用户浏览的地址（即浏览器输入的地址，如果错误会导致cookies无法使用
+		- URL：用户浏览的地址（即浏览器输入的地址，如果错误会导致cookies无法使用）
 		- SourceName：MySQL连接的地址
-	- Windows下运行runserver.bat运行
-	- Linux编译main包，在main目录下运行
+	- Windows下运行runserver.bat开启服务
+	- Linux运行runserver.sh开启服务
