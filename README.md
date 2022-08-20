@@ -37,4 +37,4 @@
 		- URL：用户浏览的地址（即浏览器输入的地址，如果错误会导致cookies无法使用）
 		- SourceName：MySQL连接的地址
 	- Windows下运行runserver.bat开启服务
-	- Linux运行runserver.sh开启服务
+	- Linux运行sudo sh runserver.sh开启服务
