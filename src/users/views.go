@@ -26,10 +26,11 @@ func Login(context *gin.Context) {
 		if !ok {
 			next = "/"
 		}
-		err := LoginFunc(context, form, next)
+		err := LoginFunc(context, form)
 		if err != nil {
 			myerror.LogError(err)
 		}
+		context.Redirect(302, next)
 		return
 	}
 	context.HTML(200, "users/login", gin.H{
@@ -147,9 +148,9 @@ func Register(context *gin.Context) {
 		_, err = DB.Exec("insert into user(name,password,introduce) values(?,?,?)", form.Name, form.Password, form.Introduce)
 		if err == nil {
 			// 注册之后自动登录
-			err = LoginFunc(context, form, next)
+			err = LoginFunc(context, form)
 			if err == nil {
-				context.Redirect(302, "/")
+				context.Redirect(302, next)
 				return
 			}
 		}

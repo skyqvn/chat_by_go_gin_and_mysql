@@ -90,7 +90,7 @@ func IsLogin(context *gin.Context) {
 }
 
 // 用于登录的函数
-func LoginFunc(context *gin.Context, form UserType, next string) error {
+func LoginFunc(context *gin.Context, form UserType) error {
 	var rows *sql.Rows
 	var password string
 	var err error
@@ -151,7 +151,6 @@ func LoginFunc(context *gin.Context, form UserType, next string) error {
 			return err
 		}
 		context.SetCookie("login_code", strconv.FormatUint(loginCode, 10), 604800, "/", URL, false, true)
-		context.Redirect(302, next)
 		return nil
 	}
 	context.HTML(200, "users/login", gin.H{
