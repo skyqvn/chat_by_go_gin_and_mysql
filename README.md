@@ -38,3 +38,9 @@
 		- SourceName：MySQL连接的地址
 	- Windows下运行runserver.bat开启服务
 	- Linux运行sudo sh runserver.sh开启服务
+	- Docker
+		- 使用DockerBuild.sh编译image并运行
+		- 备份命令:docker save > chat.tar chat:v1
+		- 导入备份命令:docker load < chat.tar 
+		- 导入备份后运行命令:docker run --name -p 80:80 -d chat:v1 /bin/bash  $GOPATH/src/chat/bin/chat
+		- > 注意，Dockerfile、DockerBuild.sh和命令的端口要根据自己的conf.json决定

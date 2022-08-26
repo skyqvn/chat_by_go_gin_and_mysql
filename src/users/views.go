@@ -26,10 +26,7 @@ func Login(context *gin.Context) {
 		if !ok {
 			next = "/"
 		}
-		err := LoginFunc(context, form)
-		if err != nil {
-			myerror.LogError(err)
-		}
+		LoginFunc(context, form)
 		context.Redirect(302, next)
 		return
 	}

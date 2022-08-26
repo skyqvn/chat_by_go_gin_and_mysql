@@ -1,0 +1,20 @@
+FROM golang:latest
+
+#设置工作目录
+WORKDIR $GOPATH/src/chat/src/main
+
+#将服务器的go工程代码加入到docker容器中
+ADD . $GOPATH/src/chat
+
+ENV GO111MODULE=on
+ENV GOPROXY=https://goproxy.cn,direct
+ENV GOPATH=$HOME/go
+
+#go构建可执行文件
+RUN go build -o ../../bin/chat .
+
+#暴露端口
+EXPOSE 80
+
+#最终运行docker命令
+ENTRYPOINT ["../../bin/chat"]
