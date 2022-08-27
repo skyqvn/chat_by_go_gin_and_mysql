@@ -11,10 +11,12 @@ ENV GOPROXY=https://goproxy.cn,direct
 ENV GOPATH=$HOME/go
 
 #go构建可执行文件
-RUN go build -o ../../bin/chat .
+RUN cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
+RUN go build -o ../../bin/chat
 
 #暴露端口
 EXPOSE 80
 
 #最终运行docker命令
 ENTRYPOINT ["../../bin/chat"]
+
