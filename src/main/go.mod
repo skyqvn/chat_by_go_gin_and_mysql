@@ -2,6 +2,12 @@ module main
 
 go 1.18
 
+replace (
+	config => ../config
+	myerror => ../myerror
+	users => ../users
+)
+
 require (
 	config v0.0.0-00010101000000-000000000000
 	github.com/gin-gonic/gin v1.8.1
@@ -30,10 +36,4 @@ require (
 	golang.org/x/text v0.3.6 // indirect
 	google.golang.org/protobuf v1.28.0 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
-)
-
-replace (
-	config => ../config
-	myerror => ../myerror
-	users => ../users
 )

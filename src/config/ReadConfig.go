@@ -1,10 +1,8 @@
 package config
 
 import (
-	"encoding/json"
-	"myerror"
 	"os"
-	"strconv"
+	"myerror"
 )
 
 type WebSiteConfig struct {
@@ -15,21 +13,10 @@ type WebSiteConfig struct {
 }
 
 func ReadConfig() {
-	configFile, err := os.Open("../../conf.json")
-	if err != nil {
-		myerror.LogError(err)
-		return
-	}
-	defer configFile.Close()
-	decoder := json.NewDecoder(configFile)
-	conf := WebSiteConfig{}
-	err = decoder.Decode(&conf)
-	if err != nil {
-		myerror.LogError(err)
-		return
-	}
-	URL = conf.URL
-	ServerAddr = conf.ServerAddr + ":" + strconv.FormatInt(int64(conf.Port), 10)
+	URL = os.Getenv("URL")
+	ServerAddr = os.Getenv("ServerAddress") + ":" + os.Getenv("ServerPort")
 	Srv.Addr = ServerAddr
-	SourceName = conf.SourceName
+	SourceName = os.Getenv("SourceName")
+	myerror.Write("服务地址:"+ServerAddr)
 }
+
