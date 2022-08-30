@@ -1,8 +1,8 @@
 package config
 
 import (
-	"os"
 	"myerror"
+	"os"
 )
 
 type WebSiteConfig struct {
@@ -17,6 +17,5 @@ func ReadConfig() {
 	ServerAddr = os.Getenv("ServerAddress") + ":" + os.Getenv("ServerPort")
 	Srv.Addr = ServerAddr
 	SourceName = os.Getenv("SourceName")
-	myerror.Write("服务地址:"+ServerAddr)
+	myerror.Write("服务地址:" + ServerAddr)
 }
-
