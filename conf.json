@@ -1,0 +1,7 @@
+{
+    "Port": 80,
+    "ServerAddr": "0.0.0.0",
+    "URL": "localhost",
+    "SourceName": "root:2009917@tcp(127.0.0.1:3306)/chat?parseTime=true"
+  }
+  
