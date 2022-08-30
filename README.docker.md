@@ -7,5 +7,6 @@
 	- ServerAddress：同conf.json中的ServerAddr
 	- URL：同conf.json中的URL
 	- SourceName：同conf.json中的SourceName
-		
 		> 具体见README.md
+	镜像运行命令:docker run --name chat -p 80:8080 -e URL=192.168.200.128 -e ServerPort=8080 -e ServerAddress=0.0.0.0 -e SourceName='root:123456@tcp(192.168.200.1:3306)/chat?parseTime=true' chat:v1
+

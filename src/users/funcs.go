@@ -108,7 +108,6 @@ func LoginFunc(context *gin.Context, form UserType) error {
 		return err
 	}
 	if !rows.Next() {
-		fmt.Println("3")
 		context.HTML(200, "users/login", gin.H{
 			"form":    form,
 			"warning": "无此用户信息",
